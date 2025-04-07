@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dify-web:
+    image: kittros/dify-web:latest
+    environment:
+      - DEPLOY_ENV=development
+      - EDITION=SELF_HOSTED
+      - CONSOLE_API_URL=https://dify.07230805.xyz
+      - APP_API_URL=https://dify.07230805.xyz
+      - MARKETPLACE_API_URL=https://dify.07230805.xyz
+      - MARKETPLACE_URL=https://dify.07230805.xyz
+      - PM2_INSTANCES=1
+      - NEXT_TELEMETRY_DISABLED=1
+    ports:
+      - "3001:3000"
+    restart: always

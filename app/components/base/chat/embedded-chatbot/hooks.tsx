@@ -310,12 +310,41 @@ export const useEmbeddedChatbot = () => {
     setClearChatList(true)
   }, [handleChangeConversation, setShowNewConversationItemInList, handleNewConversationInputsChange, setClearChatList])
 
+  // 确保在切换对话 (currentConversationId 变化) 时，正确设置初始的 currentConversationInputs
+useEffect(() => {
+  // 尝试根据 currentConversationId 找到对应的会话信息
+  const conversationItem = conversationList.find(item => item.id === currentConversationId)
+                         || pinnedConversationList.find(item => item.id === currentConversationId);
+
+  if (conversationItem) {
+      // 使用会话信息中存储的 inputs 作为初始值
+      // 注意：这里的 conversationItem.inputs 应该包含用户开始这个会话时的输入
+      // 如果 conversationItem.inputs 不可靠，你可能需要从 appChatListData 中找到最新的【用户】消息来获取输入
+      // 但最简单可靠的是用 conversationItem.inputs （如果它代表初始输入）
+      setCurrentConversationInputs(conversationItem.inputs || {});
+  } else if (!currentConversationId) {
+      // 如果切换回了“新对话”状态 (currentConversationId 为空)
+      // 可能需要重置 currentConversationInputs，例如使用 URL 参数的初始值
+      // 或者使用 newConversationInputsRef.current？具体取决于产品逻辑
+      // 例如：setCurrentConversationInputs(initInputs);
+  }
+  // 当 currentConversationId 变化时执行这个 effect
+}, [currentConversationId, conversationList, pinnedConversationList, /* initInputs? */ setCurrentConversationInputs]);
+
   const handleNewConversationCompleted = useCallback((newConversationId: string) => {
-    setNewConversationId(newConversationId)
-    handleConversationIdInfoChange(newConversationId)
-    setShowNewConversationItemInList(false)
-    mutateAppConversationData()
-  }, [mutateAppConversationData, handleConversationIdInfoChange])
+    const inputsUsedForFirstMessage = { ...newConversationInputsRef.current };
+    setNewConversationId(newConversationId);
+    handleConversationIdInfoChange(newConversationId);
+    // 这一行对于处理【第一次】发送仍然至关重要
+    setCurrentConversationInputs(inputsUsedForFirstMessage);
+    setShowNewConversationItemInList(false);
+    mutateAppConversationData();
+  }, [
+    mutateAppConversationData,
+    handleConversationIdInfoChange,
+    setCurrentConversationInputs,
+    newConversationInputsRef,
+  ]);
 
   const handleFeedback = useCallback(async (messageId: string, feedback: Feedback) => {
     await updateFeedback({ url: `/messages/${messageId}/feedbacks`, body: { rating: feedback.rating } }, isInstalledApp, appId)

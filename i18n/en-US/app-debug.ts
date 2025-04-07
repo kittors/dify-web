@@ -25,7 +25,7 @@ const translation = {
     debugConfig: 'Debug',
     addFeature: 'Add Feature',
     automatic: 'Generate',
-    stopResponding: 'Stop responding',
+    stopResponding: '停止回复',
     agree: 'like',
     disagree: 'dislike',
     cancelAgree: 'Cancel like',
@@ -299,7 +299,7 @@ const translation = {
   },
   errorMessage: {
     nameOfKeyRequired: 'name of the key: {{key}} required',
-    valueOfVarRequired: '{{key}} value can not be empty',
+    valueOfVarRequired: '{{key}} ',
     queryRequired: 'Request text is required.',
     waitForResponse:
       'Please wait for the response to the previous message to complete.',
@@ -307,7 +307,7 @@ const translation = {
       'Please wait for the response to the batch task to complete.',
     notSelectModel: 'Please choose a model',
     waitForImgUpload: 'Please wait for the image to upload',
-    waitForFileUpload: 'Please wait for the file/files to upload',
+    waitForFileUpload: '请等待文件上传完成',
   },
   warningMessage: {
     timeoutExceeded: 'Results are not displayed due to timeout. Please refer to the logs to gather complete results.',
